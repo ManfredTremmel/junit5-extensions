@@ -7,7 +7,7 @@ import com.google.inject.name.Names;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
-import javax.inject.Named;
+import jakarta.inject.Named;
 import name.falgout.jeffrey.testing.junit.guice.SharedInjectorsTest.OuterClassModule;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;

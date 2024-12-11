@@ -8,7 +8,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import java.lang.reflect.InvocationTargetException;
-import javax.inject.Inject;
+import jakarta.inject.Inject;
 import name.falgout.jeffrey.testing.junit.guice.GuiceExtensionTest.TestModule;
 import name.falgout.jeffrey.testing.junit.testing.ExpectFailure;
 import name.falgout.jeffrey.testing.junit.testing.ExpectFailure.Cause;

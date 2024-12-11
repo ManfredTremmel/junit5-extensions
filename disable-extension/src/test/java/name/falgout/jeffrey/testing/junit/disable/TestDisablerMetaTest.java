@@ -1,9 +1,9 @@
 package name.falgout.jeffrey.testing.junit.disable;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.Arrays;
 import name.falgout.jeffrey.testing.junit.testing.ExtensionTester;
 import name.falgout.jeffrey.testing.junit.testing.TestPlanExecutionReport;
 import name.falgout.jeffrey.testing.junit.testing.TestPlanExecutionReport.DisplayName;
@@ -34,13 +34,13 @@ class TestDisablerMetaTest {
         () -> assertThat(report.getTests()).hasSize(10),
         () ->
             assertThat(report.getSuccessful())
-                .containsAllOf(
+                .containsAtLeastElementsIn(Arrays.asList(
                     nestedFoo,
                     parameterized1,
-                    parameterized2),
+                    parameterized2)),
         () ->
             assertThat(report.getSkipped().keySet())
-                .containsAllOf(
+                .containsAtLeastElementsIn(Arrays.asList(
                     foo,
                     disableSpecificTest,
                     nestedBar,
@@ -48,7 +48,7 @@ class TestDisablerMetaTest {
                     nestedDifferentDisplayName,
                     nested2,
                     parameterized3,
-                    badTest),
+                    badTest)),
         () -> assertThat(report.getSkippedCause(foo)).hasValue("foo!"),
         () -> assertThat(report.getSkippedCause(nestedBaz)).hasValue("baz!")
     );

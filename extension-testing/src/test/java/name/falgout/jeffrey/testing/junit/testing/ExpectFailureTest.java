@@ -4,6 +4,7 @@ import static com.google.common.truth.Truth.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
 import java.io.IOException;
+import java.util.Arrays;
 import name.falgout.jeffrey.testing.junit.testing.ExpectFailure.Cause;
 import name.falgout.jeffrey.testing.junit.testing.TestPlanExecutionReport.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -61,47 +62,50 @@ public class ExpectFailureTest {
         () -> assertThat(report.getTests()).hasSize(5),
         () ->
             assertThat(report.getFailures().keySet())
-                .containsAllOf(
-                    noExceptionThrown,
-                    wrongExceptionThrown,
-                    wrongCauseThrown,
+                .containsAtLeastElementsIn(Arrays.asList(
+                	noExceptionThrown,
+                	wrongExceptionThrown,
+                	wrongCauseThrown,
                     noCauseThrown,
-                    wrongMessage),
+                    wrongMessage)),
         () -> {
-          Throwable failure = report.getFailure(noExceptionThrown).get();
-          assertThat(failure).isInstanceOf(AssertionError.class);
-          assertThat(failure).hasMessageThat().contains("No exception was thrown!");
-        },
+            Throwable failure = report.getFailure(noExceptionThrown).get();
+            assertThat(failure).isInstanceOf(AssertionError.class);
+            assertThat(failure).hasMessageThat().contains("No exception was thrown!");
+          },
         () -> {
-          Throwable failure = report.getFailure(wrongExceptionThrown).get();
-          assertThat(failure).isInstanceOf(AssertionError.class);
-          assertThat(failure).hasMessageThat()
-              .contains("Not true that <java.lang.RuntimeException: Oops>"
-                  + " is an instance of <java.lang.IllegalArgumentException>");
-        },
+            Throwable failure = report.getFailure(wrongExceptionThrown).get();
+            assertThat(failure).isInstanceOf(AssertionError.class);
+            assertThat(failure).hasMessageThat()
+                .contains("expected instance of: java.lang.IllegalArgumentException\n"
+                		+ "but was instance of : java.lang.RuntimeException\n"
+                		+ "with value          : java.lang.RuntimeException: Oops");
+          },
         () -> {
-          Throwable failure = report.getFailure(wrongCauseThrown).get();
-          assertThat(failure).isInstanceOf(AssertionError.class);
-          assertThat(failure).hasMessageThat()
-              .contains("Unexpected cause for java.lang.IllegalArgumentException");
-          assertThat(failure).hasMessageThat()
-              .contains("Not true that <java.lang.RuntimeException: bar>"
-                  + " is an instance of <java.io.IOException>");
-        },
-        () -> {
-          Throwable failure = report.getFailure(noCauseThrown).get();
-          assertThat(failure).isInstanceOf(AssertionError.class);
-          assertThat(failure).hasMessageThat()
-              .contains("Unexpected cause for java.lang.IllegalArgumentException");
-          assertThat(failure).hasMessageThat()
-              .contains("Not true that <null> is an instance of <java.io.IOException>");
-        },
-        () -> {
-          Throwable failure = report.getFailure(wrongMessage).get();
-          assertThat(failure).isInstanceOf(AssertionError.class);
-          assertThat(failure).hasMessageThat()
-              .contains("Not true that <\"54321\"> contains <\"12345\">");
-        }
+            Throwable failure = report.getFailure(wrongCauseThrown).get();
+            assertThat(failure).isInstanceOf(AssertionError.class);
+            assertThat(failure).hasMessageThat()
+                .contains("value of            : throwable.getCause()\n"
+                		+ "expected instance of: java.io.IOException\n"
+                		+ "but was instance of : java.lang.RuntimeException\n"
+                		+ "with value          : java.lang.RuntimeException: bar");
+          },
+          () -> {
+            Throwable failure = report.getFailure(noCauseThrown).get();
+            assertThat(failure).isInstanceOf(AssertionError.class);
+            assertThat(failure).hasMessageThat()
+                .contains("value of            : throwable.getCause()\n"
+                		+ "expected instance of: java.io.IOException\n"
+                		+ "but was             : null");
+          },
+          () -> {
+            Throwable failure = report.getFailure(wrongMessage).get();
+            assertThat(failure).isInstanceOf(AssertionError.class);
+            assertThat(failure).hasMessageThat()
+                .contains("value of           : throwable.getMessage()\n"
+                		+ "expected to contain: 12345\n"
+                		+ "but was            : 54321");
+          }
     );
   }
 

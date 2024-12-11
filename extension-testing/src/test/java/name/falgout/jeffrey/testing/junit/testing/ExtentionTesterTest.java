@@ -1,9 +1,9 @@
 package name.falgout.jeffrey.testing.junit.testing;
 
 import static com.google.common.truth.Truth.assertThat;
-import static com.google.common.truth.Truth8.assertThat;
 import static org.junit.jupiter.api.Assertions.assertAll;
 
+import java.util.Arrays;
 import name.falgout.jeffrey.testing.junit.testing.TestPlanExecutionReport.DisplayName;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Nested;
@@ -37,9 +37,9 @@ public class ExtentionTesterTest {
     assertAll(
         () -> assertThat(report.getTests()).hasSize(4),
         () -> assertThat(report.getSuccessful())
-            .containsAllOf(
+            .containsAtLeastElementsIn(Arrays.asList(
                 DisplayName.create("successful()"),
-                DisplayName.create("NestedTests", "nestedTest()")),
+                DisplayName.create("NestedTests", "nestedTest()"))),
         () ->
             assertThat(report.getSkippedCause(DisplayName.create("skipped()")))
                 .hasValue("reasons"),
